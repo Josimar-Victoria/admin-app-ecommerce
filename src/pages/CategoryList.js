@@ -1,34 +1,54 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Table } from 'antd'
+import { useDispatch, useSelector } from 'react-redux'
+import { getProductCategory } from '../features/pCategory/pCategorySlice'
+import { BiEdit } from 'react-icons/bi'
+import { AiFillDelete } from 'react-icons/ai'
+import { Link } from 'react-router-dom'
+
+const columns = [
+  {
+    title: 'SNo',
+    dataIndex: 'key'
+  },
+  {
+    title: 'Category',
+    dataIndex: 'category',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.category.length - b.category.length
+  },
+
+  {
+    title: 'Action',
+    dataIndex: 'action'
+  }
+]
 
 const CategoryList = () => {
-  const columns = [
-    {
-      title: 'SNo',
-      dataIndex: 'key'
-    },
-    {
-      title: 'Nombre',
-      dataIndex: 'name'
-    },
-    {
-      title: 'productos',
-      dataIndex: 'productos'
-    },
-    {
-      title: 'Estado',
-      dataIndex: 'Status'
-    }
-  ]
+  const pcategories = useSelector(state => state.pCategorie.pCategories)
+
+  const dispatch = useDispatch()
 
   const data1 = []
 
-  for (let i = 0; i < 46; i++) {
+  useEffect(() => {
+    dispatch(getProductCategory())
+  }, [dispatch])
+
+  for (let i = 0; i < pcategories.length; i++) {
     data1.push({
-      key: i,
-      name: `Edward King ${i}`,
-      productos: `London, Park Lane no. ${i}`,
-      Status: `enviao. ${i}`
+      key: i + 1,
+      category: pcategories[i].title,
+      action: (
+        <div className=''>
+          <Link className='fs-3' to='/'>
+            <BiEdit />
+          </Link>
+          <Link className='fs-3 ms-3 text-danger' to='/'>
+            <AiFillDelete />
+          </Link>
+        </div>
+      )
     })
   }
 
